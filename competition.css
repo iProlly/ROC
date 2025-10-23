@@ -1,0 +1,795 @@
+/* === THEME VARIABLES === */
+:root {
+  --bg: #f9fafb;          /* soft off-white */
+  --text: #1e1e1e;        /* near-black, easy to read */
+  --accent: #3f72af;      /* gentle academic blue */
+  --hover: #dbe2ef;       /* pale blue-gray for hover */
+  --nav-bg: #3f72af;      /* matches accent */
+  --card-bg: #ffffff;     /* clear separation for cards */
+  --shadow: rgba(0,0,0,0.15);
+}
+
+[data-theme="dark"] {
+  --bg: #181a1e;          /* darker neutral base — reduces glow */
+  --text: #e6e7eb;        /* softer than pure white */
+  --accent: #7ea6e0;      /* desaturated academic blue */
+  --hover: #a8c3e9;       /* pale blue-gray hover */
+  --nav-bg: #2b3b52;      /* calm navy-gray navigation bar */
+  --card-bg: #202329;     /* lifted slightly above bg */
+  --shadow: rgba(0,0,0,0.6);
+}
+
+@font-face {
+  font-family: 'Chulabhorn Likhit Display';
+  src: url('./fonts/chulabhornlikittext-regular.woff2') format('woff2'),
+       url('./fonts/chulabhornlikittext-regular.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: 'Chulabhorn Likhit Display', sans-serif;
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+header {
+  background: var(--bg);
+  color: var(--accent);
+  padding: 20px 20px 60px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+}
+
+nav {
+  display: block;
+  background: var(--nav-bg);
+  padding: 15px 40px;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px var(--shadow);
+  margin: 20px auto 0 auto;
+  max-width: 1200px;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+nav ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+  color: var(--hover);
+}
+
+/* Page content */
+main {
+  max-width: 1200px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+section {
+  margin-bottom: 60px;
+}
+
+section h2 {
+  color: var(--accent);
+  border-bottom: 2px solid var(--hover);
+  padding-bottom: 5px;
+}
+
+/* === Language + Theme cluster (right side) === */
+.nav { position: relative; }
+.nav-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* keeps the links centered */
+}
+.nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+}
+.nav-utilities {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lang-switch,
+.theme-toggle {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--card-bg);
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 2px 8px var(--shadow);
+  cursor: pointer;
+}
+.lang-switch:hover, .theme-toggle:hover { opacity: 0.9; }
+
+
+/* === DROPDOWN NAV (added) === */
+.nav { overflow: visible; }
+.nav-links li { position: relative; }
+.nav-links li.dropdown > a::after { content: " ▾"; font-weight: 700; }
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: var(--nav-bg);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px var(--shadow);
+  padding: 8px 0;
+  min-width: 220px;
+  z-index: 2000;
+}
+.dropdown-menu li a {
+  display: block;
+  padding: 10px 16px;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.dropdown-menu li a:hover {
+  background: var(--hover);
+  color: #fff;
+}
+/* open on hover and keyboard focus */
+.dropdown:hover .dropdown-menu,
+.dropdown:focus-within .dropdown-menu {
+  display: block;
+}
+
+
+/* === DROPDOWN FIX (hover gap removed) === */
+.nav-links li {
+  position: relative;
+}
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;   /* stick directly below parent */
+  left: 0;
+  background: var(--nav-bg);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px var(--shadow);
+  padding: 8px 0;
+  min-width: 220px;
+  z-index: 2000;
+}
+.nav-links li.dropdown:hover > .dropdown-menu,
+.nav-links li.dropdown:focus-within > .dropdown-menu {
+  display: block;
+}
+.nav-links li.dropdown {
+  padding-bottom: 12px; /* keep hover active into submenu */
+}
+
+
+/* === DROPDOWN REFINEMENT v2 (no flicker, centered) === */
+/* Center nav items vertically */
+nav ul {
+  align-items: center;
+}
+
+/* Remove padding trick from v1 that increased nav height */
+.nav-links li.dropdown { padding-bottom: 0 !important; position: relative; }
+
+/* Create an invisible bridge so hover doesn't drop when moving into menu */
+.nav-links li.dropdown::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 10px; /* bridge the gap */
+}
+
+/* Menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  background: var(--nav-bg);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px var(--shadow);
+  padding: 0;               /* remove extra padding */
+  width: 180px;             /* ✅ narrower, fixed width */
+  z-index: 2000;
+  text-align: center;       /* ✅ center text horizontally */
+  overflow: hidden;
+}
+
+.dropdown-menu li {
+  list-style: none;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 10px 0;          /* ✅ balanced vertical padding */
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.dropdown-menu li a:hover {
+  background: var(--hover);
+  color: #fff;
+}
+
+.dropdown-menu li:first-child a:hover {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+.dropdown-menu li:last-child a:hover {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* Open on hover or keyboard focus */
+.nav-links li.dropdown:hover > .dropdown-menu,
+.nav-links li.dropdown:focus-within > .dropdown-menu {
+  display: block;
+}
+
+/* Optional: down arrow */
+.nav-links li.dropdown > a::after {
+  content: " ▾";
+  font-weight: 700;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  box-shadow: 0 4px 12px var(--shadow);
+  background-color: var(--bg);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--shadow);
+}
+
+.styled-table th {
+  background-color: var(--nav-bg);
+  color: #fff;
+  font-weight: bold;
+}
+
+
+.styled-table tr:last-child td {
+  border-bottom: none;
+}
+
+section ul li a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+section ul li a:hover {
+  color: var(--hover);
+}
+
+section ul li a:visited {
+  color: var(--accent); /* same as normal */
+}
+section ul li a:visited:hover {
+  color: var(--hover);  /* allow hover color */
+}
+main a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+main a:hover {
+  color: var(--hover);
+}
+
+main a:visited {
+  color: var(--accent); /* same as normal */
+}
+main a:visited:hover {
+  color: var(--hover);  /* allow hover color */
+}
+
+.styled-table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+}
+
+.styled-table th,
+.styled-table td{
+  padding:12px;
+  text-align:center;
+  border:0;                    /* start from clean slate */
+}
+
+/* vertical lines */
+.styled-table th:not(:last-child),
+.styled-table td:not(:last-child){
+  border-right:1px solid #e0e0e0;
+}
+
+/* horizontal lines (one per row) */
+.styled-table tbody tr{
+  border-bottom:1px solid #e0e0e0;
+}
+
+/* bottom edge across entire table */
+.styled-table{
+  border-bottom:1px solid #e0e0e0;
+}
+
+.syllabus-table {
+  display: none; /* hidden by default */
+  margin-top: 10px;
+}
+
+.toggle-topic {
+  cursor: pointer;
+  color: var(--accent);
+  user-select: none;
+}
+
+.toggle-topic:hover {
+  text-decoration: none;
+  color: var(--hover);
+}
+
+
+
+.menu-toggle {
+display: none; /* hidden by default */
+margin-right: auto;
+border: none;
+padding: 10px 14px;
+border-radius: 12px;
+background: var(--card-bg);
+color: var(--accent);
+font-weight: 800;
+box-shadow: 0 2px 8px var(--shadow);
+}
+.menu-toggle:focus-visible { outline: 2px solid var(--hover); outline-offset: 2px; }
+
+
+/* Collapsible container baseline */
+.nav-links[data-collapsible] { transition: max-height 0.25s ease, opacity 0.2s ease; }
+
+
+/*****************
+* Up to 1024px *
+*****************/
+@media (max-width: 1024px) {
+header { padding: 16px 16px 44px; }
+header h1 { font-size: 1.4rem; }
+nav { padding: 12px 16px; border-radius: 16px; }
+.nav-utilities { right: 10px; }
+main { margin: 40px auto; padding: 0 16px; }
+}
+
+
+/***************
+* Up to 768px *
+***************/
+@media (max-width: 768px) {
+  /* Hamburger still shows only on phones */
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+  }
+
+  .nav-inner { justify-content: space-between; }
+
+  /* Collapsible primary panel */
+  .nav-links {
+    position: absolute;
+    left: 0; right: 0; top: 100%;
+    background: var(--nav-bg);
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 10px 24px var(--shadow);
+    padding: 8px 0; margin: 8px 0 0 0;
+    display: block;
+    max-height: 0; overflow: hidden; opacity: 0;
+    z-index: 2500;
+  }
+  .nav-links.open {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    opacity: 1;
+  }
+
+  .nav-links > li { display: block; }
+  .nav-links > li > a { display: block; padding: 12px 16px; }
+
+  /* Inline accordion submenu under parent */
+  .nav-links li.dropdown > a { position: relative; }
+  .nav-links li.dropdown > a::after {
+    content: '\25BC'; /* caret */
+    position: absolute;
+    right: 16px;
+    transform: scale(0.8);
+  }
+  .nav-links li.dropdown.open > a::after { content: '\25B2'; }
+
+  /* ✅ Centered inline submenu under parent */
+  .dropdown-menu {
+    position: static;
+    display: none;
+    padding: 6px 0;
+    margin: 0;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    text-align: center;           /* center text horizontally */
+  }
+  .dropdown.open > .dropdown-menu { display: block; }
+
+  .dropdown-menu li {
+    list-style: none;
+  }
+
+  .dropdown-menu li a {
+    display: inline-block;        /* inline-block centers nicely */
+    padding: 8px 12px;
+    width: auto;
+  }
+  .dropdown-menu li a::before {
+    content: '•';
+    margin-right: 6px;
+  }
+}
+
+/* Phones only – center the inline submenu perfectly */
+@media (max-width: 768px) {
+  .nav-links .dropdown-menu {
+    position: static;
+    display: none;          /* collapsed by default */
+    width: 100%;
+    margin: 0;
+    padding: 6px 0;         /* no left padding */
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    list-style: none;       /* kill default bullets */
+    text-align: center;     /* baseline center */
+    padding-left: 0;        /* hard reset */
+  }
+  .nav-links .dropdown.open > .dropdown-menu {
+    display: flex;          /* center children reliably */
+    flex-direction: column;
+    align-items: center;    /* <-- this is the key */
+    gap: 4px;
+  }
+
+  .nav-links .dropdown-menu li {
+    list-style: none;
+    margin: 0;
+    padding: 0;             /* remove any inherited left indent */
+  }
+
+  .nav-links .dropdown-menu a {
+    display: inline-block;  /* shrink to content so centering is obvious */
+    padding: 10px 16px;
+    text-align: center;     /* override any upstream left-align */
+    /* If something upstream wins specificity, uncomment the next line */
+    /* text-align: center !important; */
+  }
+
+  /* Remove the custom bullet to keep centering clean */
+  .nav-links .dropdown-menu a::before { content: ''; margin: 0; }
+
+  /* Optional: if you still see a tiny nudge left, this forces zero-indents everywhere */
+  .nav-links .dropdown-menu,
+  .nav-links .dropdown-menu li { margin-left: 0; padding-left: 0; }
+
+
+  .menu-toggle {
+  position: relative;
+  z-index: 4000;        /* higher than the panel */
+}
+
+/* Closed panel must not eat taps */
+.nav-links {
+  pointer-events: none; /* when closed: ignore taps */
+}
+.nav-links.open {
+  pointer-events: auto; /* only interactive when open */
+}
+}
+
+@media (max-width: 768px) {
+  .nav { position: relative; }
+  .nav-inner { position: relative; }
+
+  /* The hamburger must sit above the panel */
+  .menu-toggle {
+    position: relative;
+    z-index: 1001;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Panel baseline: hidden but measurable (no display:none) */
+  .nav-links {
+    position: absolute;
+    left: 0; right: 0;
+    top: calc(100% + 8px);
+    background: var(--nav-bg);
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 10px 24px var(--shadow);
+    margin: 0; padding: 8px 0;
+
+    /* hidden state */
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    z-index: 1000;
+
+    /* smooth open */
+    transition: opacity .18s ease, max-height .25s ease, visibility 0s linear .25s;
+  }
+
+  /* OPEN state – this is what should show up after tapping hamburger */
+  .nav-links.open {
+    visibility: visible;
+    opacity: 1;
+    max-height: 80vh;                /* enough space to see items */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transition: opacity .18s ease, max-height .25s ease, visibility 0s;
+  }
+
+  .nav-links > li { display: block; }
+  .nav-links > li > a { display: block; padding: 12px 16px; }
+
+  /* Inline accordion submenu under parent (centered) */
+  .nav-links li.dropdown > a { position: relative; }
+  .nav-links li.dropdown > a::after { content:'\25BC'; position:absolute; right:16px; transform:scale(.8); }
+  .nav-links li.dropdown.open > a::after { content:'\25B2'; }
+
+  .nav-links .dropdown-menu {
+    position: static;
+    display: none;
+    width: 100%;
+    margin: 0;
+    padding: 6px 0;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+
+    /* centering */
+    display: none;
+    text-align: center;
+    list-style: none;
+  }
+  .nav-links .dropdown.open > .dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    /* submenu items centered */
+    gap: 4px;
+  }
+  .nav-links .dropdown-menu li { list-style: none; margin: 0; padding: 0; }
+  .nav-links .dropdown-menu a { display:inline-block; padding:10px 16px; text-align:center; }
+  .nav-links .dropdown-menu a::before { content:''; } /* remove bullet */
+
+  /* Utilities inline on phones */
+  .nav-utilities { position: static; transform: none; margin-left: 8px; }
+}
+
+
+@media (min-width: 769px) {
+  .nav-links li.dropdown > a[href="education.html"],
+  .nav-links li.dropdown > a[href="competition.html"],
+  .nav-links li.dropdown > a[href="education_th.html"],
+  .nav-links li.dropdown > a[href="competition_th.html"] {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+    opacity: 0.95;
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* 1) Regular tables (not inside .syllabus-table) */
+  section table.styled-table {
+    text-align: center;
+    display: block;
+    max-width: 100%;               /* fits viewport */
+    min-width: 650px;              /* force content wider than viewport -> scroll */
+    overflow-x: auto;              /* scroll THIS table only */
+    -webkit-overflow-scrolling: touch;
+    margin: 0 auto;
+  }
+
+  /* 2) Syllabus tables (inside .syllabus-table) */
+  .syllabus-table {
+    text-align: center;
+    overflow-x: auto;              /* wrapper is the scroller */
+    -webkit-overflow-scrolling: touch;
+    padding: 0 8px;
+  }
+  .syllabus-table .styled-table {
+    width: auto;                   /* natural width */
+    min-width: 600px;              /* just wide enough to trigger scroll */
+    display: block;                /* allow overflow on wrapper to work */
+    margin: 0 auto;
+  }
+
+  /* Optional readability tweaks (keeps centered look) */
+  .styled-table th,
+  .styled-table td {
+    text-align: center;
+    white-space: normal;
+    line-height: 1.45;
+  }
+
+  /* Prevent page-level sideways scroll */
+  html, body { overflow-x: hidden; }
+}
+
+@media (max-width: 768px) {
+  .table-wrapper {
+    overflow-x: auto;                /* <-- only this div scrolls */
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -10px;                 /* small side breathing room */
+    padding: 0 10px;
+  }
+
+  .table-wrapper .styled-table {
+    display: table;                  /* keep table semantics */
+    width: max-content;              /* natural column width */
+    min-width: 900px;                /* wider than viewport */
+    table-layout: auto;
+  }
+
+  /* optional aesthetics */
+  .styled-table th,
+  .styled-table td {
+    text-align: center;
+    white-space: normal;
+    line-height: 1.45;
+  }
+
+  
+}
+
+/* === Styled table visual enhancement === */
+.styled-table {
+  border-collapse: separate;      /* allow border radius to show */
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid var(--hover);
+  border-radius: 12px;            /* ✅ adds rounded corners */
+  overflow: hidden;               /* ✅ keeps content inside the radius */
+  background: var(--card-bg);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+/* Header styling */
+.styled-table thead th {
+  background: var(--nav-bg);
+  color: #fff;
+  text-align: left;
+  padding: 10px 14px;
+  font-weight: 700;
+}
+
+/* Table cells */
+.styled-table td, .styled-table th {
+  border-bottom: 1px solid var(--hover);
+  padding: 10px 14px;
+}
+
+/* Remove bottom border for the last row */
+.styled-table tr:last-child td {
+  border-bottom: none;
+}
+
+.syllabus-table thead tr > th,
+.syllabus-table thead th {
+  text-align: center !important;
+  vertical-align: middle;
+  padding: 12px 16px;
+  display: table-cell !important;   /* undo any flex/grid that might leak in */
+}
+
+/* If header content is wrapped in elements (div/span), center those too */
+.syllabus-table thead th > * {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center !important;
+}
+
+/* Optional: keep rounded corners on the header row */
+.syllabus-table thead th:first-child { border-top-left-radius: 12px; }
+.syllabus-table thead th:last-child  { border-top-right-radius: 12px; }
+
+/* ---- Styled table: always rounded, including phones ---- */
+.styled-table {
+  border-collapse: separate !important;   /* allow radius to show */
+  border-spacing: 0 !important;
+  border-radius: 12px;
+  overflow: hidden;                       /* clip inner edges */
+  background: var(--card-bg);
+  box-shadow: 0 4px 12px var(--shadow);
+  position: relative;
+}
+
+/* If something still forces collapse or weird overflow on mobile,
+   clip the render box itself. */
+@supports (clip-path: inset(0 round 12px)) {
+  .styled-table {
+    clip-path: inset(0 round 12px);
+  }
+}
+
+/* Keep header corners rounded */
+.styled-table thead th:first-child { border-top-left-radius: 12px; }
+.styled-table thead th:last-child  { border-top-right-radius: 12px; }
+
+/* Keep bottom row corners rounded */
+.styled-table tbody tr:last-child td:first-child { border-bottom-left-radius: 12px; }
+.styled-table tbody tr:last-child td:last-child  { border-bottom-right-radius: 12px; }
+
+/* Mobile: re-assert in case a phone-specific block overrides things */
+@media (max-width: 768px) {
+  .styled-table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    overflow: hidden;
+    box-shadow: 0 4px 12px var(--shadow);
+  }
+}
+
+/* Optional: add radius and shadow to scroll wrapper if present */
+.table-container, .table-responsive, .table-scroll {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px var(--shadow);
+  background: var(--card-bg);
+}
